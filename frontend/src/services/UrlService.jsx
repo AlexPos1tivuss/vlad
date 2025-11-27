@@ -1,7 +1,9 @@
 import axios from "axios";
 import { getToken, getAuthHeaders } from "./tokenService";
 
-const REST_API_BASE_URL = 'http://localhost:8080/api';
+const REST_API_BASE_URL = import.meta.env.PROD 
+    ? 'https://api.example.com/api'
+    : 'http://localhost:8080/api';
 const REST_API_AUTH_URL = REST_API_BASE_URL + '/auth';
 const REST_API_ADMIN_URL = REST_API_BASE_URL + '/admin';
 const REST_API_MANAGER_URL = REST_API_BASE_URL + '/manager';
