@@ -36,3 +36,12 @@ externalPort = 80
 [[ports]]
 localPort = 8080
 externalPort = 8080
+
+[[ports]]
+localPort = 40017
+externalPort = 3000
+
+[deployment]
+deploymentTarget = "vm"
+run = ["bash", "-c", "cd targeteer && java -jar target/targeteer-0.0.1-SNAPSHOT.jar & cd ../frontend && npx vite preview --host 0.0.0.0 --port 5000"]
+build = ["bash", "-c", "cd targeteer && mvn clean package -DskipTests && cd ../frontend && npm install && npm run build"]
