@@ -1,0 +1,45 @@
+version: '3/1'
+
+volumes:
+  pg_targeteer:
+
+services:
+  postgres:
+    image: postgres:17
+    restart: always 
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pg_targeteer:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    networks:
+      - app-network
+    
+  frontend:
+    build: 
+      context: ./frontend
+    ports:
+      - "5173:80"
+    networks:
+      - app-network
+
+  backend:
+    build: 
+      context: ./targeteer
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-targeteer_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
